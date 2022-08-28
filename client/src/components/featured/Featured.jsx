@@ -4,13 +4,14 @@ import 'slick-carousel/slick/slick-theme.css'
 import Slider from 'react-slick'
 import useFetch from '../../hooks/useFetch'
 import { images } from '../../data'
+import getRatingTitle from '../../utils/getRatingTitle'
 
 const Featured = () => {
   const { data: countByCities } = useFetch(
-    '/hotels/countByCities?cities=Goa,Mumbai,New Delhi,Lonavala,Bangaluru,Jaipur,Pondicherry'
+    '/hotels/countByCities?cities=goa,mumbai,new delhi,lonavala,bangaluru,jaipur,pondicherry'
   )
   const { data: countByPropertyTypes } = useFetch(
-    '/hotels/countByPropertyTypes?types=Hotel,Apartment,Resort,Villa,Cabin,Cottage'
+    '/hotels/countByPropertyTypes?types=hotel,apartment,resort,villa,cabin,cottage'
   )
   const { data: featuredHotels } = useFetch('/hotels?featured=true&limit=5')
 
@@ -19,7 +20,7 @@ const Featured = () => {
       <div className="featured__wrapper">
         {countByCities && (
           <div className="carousel">
-            <h2 className="carousel__title">Explore United States</h2>
+            <h2 className="carousel__title">Explore India</h2>
             <p className="carousel__subtitle">These popular destinations have a lot to offer</p>
 
             <Slider slidesToShow={5} infinite={false} className="slider">
@@ -45,7 +46,7 @@ const Featured = () => {
                     <img src={images.propertyTypes[hotel.type]} alt={hotel.type} />
                     <h3>{hotel.type}s</h3>
                     <span>
-                      {hotel.count} {hotel.type.toLowerCase()}s
+                      {hotel.count} {hotel.type}s
                     </span>
                   </div>
                 ))}
@@ -56,19 +57,19 @@ const Featured = () => {
         <div className="postcardContainer">
           <div className="postcard">
             <div className="postcard__item">
-              <img src={images.places.Brooklyn} alt="" />
+              <img src={images.places.brooklyn} alt="" />
               <div className="postcard__overlay">
                 <h2>
-                  Brooklyn <img src={images.flags.USA} alt="" valign="middle"></img>
+                  Brooklyn <img src={images.flags.usa} alt="" valign="middle"></img>
                 </h2>
                 <span>18901 properties</span>
               </div>
             </div>
             <div className="postcard__item">
-              <img src={images.places.Amsterdam} alt="" />
+              <img src={images.places.amsterdam} alt="" />
               <div className="postcard__overlay">
                 <h2>
-                  Amsterdam <img src={images.flags.Netherlands} alt="" valign="middle"></img>
+                  Amsterdam <img src={images.flags.netherlands} alt="" valign="middle"></img>
                 </h2>
                 <span>1431 properties</span>
               </div>
@@ -77,29 +78,29 @@ const Featured = () => {
 
           <div className="postcard">
             <div className="postcard__item">
-              <img src={images.places['New York']} alt="" />
+              <img src={images.places['new york']} alt="" />
               <div className="postcard__overlay">
                 <h2>
-                  New York <img src={images.flags.USA} alt="" valign="middle"></img>
+                  New York <img src={images.flags.usa} alt="" valign="middle"></img>
                 </h2>
                 <span>1500 properties</span>
               </div>
             </div>
             <div className="postcard__item">
-              <img src={images.places['Rio de Janeiro']} alt="" />
+              <img src={images.places['rio de janeiro']} alt="" />
               <div className="postcard__overlay">
                 <h2>
-                  Rio de Janeiro <img src={images.flags.Brazil} alt="" valign="middle"></img>
+                  Rio de Janeiro <img src={images.flags.brazil} alt="" valign="middle"></img>
                 </h2>
                 <span>1901 properties</span>
               </div>
             </div>
 
             <div className="postcard__item">
-              <img src={images.places['Los Angeles']} alt="" />
+              <img src={images.places['los angeles']} alt="" />
               <div className="postcard__overlay">
                 <h2>
-                  Los Angeles <img src={images.flags.USA} alt="" valign="middle"></img>
+                  Los Angeles <img src={images.flags.usa} alt="" valign="middle"></img>
                 </h2>
                 <span>17001 properties</span>
               </div>
@@ -121,7 +122,7 @@ const Featured = () => {
                     <p className="price">Starting from ${hotel.cheapestPrice}</p>
                     <div className="ratingContainer">
                       <span className="rating">{hotel.rating}</span>
-                      <span className="scoreTitle">Superb</span>
+                      <span className="scoreTitle">{getRatingTitle(hotel.reviews)}</span>
                       <span className="reviews">{hotel.reviews || 0} reviews</span>
                     </div>
                   </div>
