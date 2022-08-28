@@ -1,0 +1,71 @@
+.searchbox {
+  background-color: var(--color-secondary);
+  flex: 0.25;
+  border-radius: 2px;
+  padding: 20px;
+  height: fit-content;
+
+  h3 {
+    font-weight: normal;
+    font-size: 20px;
+    margin-bottom: 5px;
+  }
+
+  .formField {
+    margin-bottom: 5px;
+    position: relative;
+
+    label {
+      font-size: 12px;
+    }
+
+    .inputContainer {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background-color: #fff;
+      padding: 8px;
+      border-radius: 2px;
+      cursor: pointer;
+
+      input {
+        width: 100%;
+        font-size: 14px;
+        border: none;
+        outline: none;
+        cursor: pointer;
+      }
+    }
+
+    .dateRangePicker {
+      position: absolute;
+      left: 0;
+      top: 62px;
+      box-shadow: 0 2px 16px rgba(0, 0, 0, 0.15);
+      z-index: 2;
+    }
+
+    .guestsInputCounter {
+      position: absolute;
+      left: 0;
+      top: 62px;
+    }
+  }
+
+  .searchBtn {
+    width: 100%;
+    height: 50px;
+    font-size: 16px;
+    background-color: var(--color-primary-light);
+    color: #fff;
+    border: none;
+    outline: none;
+    margin-top: 15px;
+    border-radius: 2px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-primary);
+    }
+  }
+}

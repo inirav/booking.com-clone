@@ -1,0 +1,129 @@
+.hotel {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+
+  &-inner {
+    width: 100%;
+    max-width: 1024px;
+
+    .head {
+      display: flex;
+      justify-content: space-between;
+
+      .location {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 14px;
+        margin-top: 3px;
+
+        .icon {
+          color: var(--color-primary-light);
+        }
+      }
+
+      .btnReserve {
+        border: none;
+        outline: none;
+        background-color: var(--color-primary-light);
+        color: #fff;
+        font-weight: 500;
+        font-size: 14px;
+        padding: 8px 12px;
+        border-radius: 2px;
+        cursor: pointer;
+
+        &:hover {
+          background-color: var(--color-primary);
+        }
+      }
+    }
+
+    .photos {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 15px;
+
+      img {
+        width: 334px;
+        border-radius: 2px;
+        cursor: pointer;
+      }
+
+      .more {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 334px;
+        font-size: 18px;
+        font-weight: 600;
+        background-color: lightgray;
+        cursor: pointer;
+        border-radius: 2px;
+      }
+    }
+
+    .description {
+      display: flex;
+      gap: 50px;
+      margin-top: 20px;
+
+      .text {
+        flex: 0.8;
+        font-size: 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .property-highlights {
+        flex: 0.3;
+        background-color: #ebf3ff;
+        padding: 15px;
+        border-radius: 2px;
+        font-size: 13px;
+        height: fit-content;
+
+        .title {
+          margin-bottom: 15px;
+        }
+
+        .bold {
+          font-size: 14px;
+          font-weight: bold;
+          margin-bottom: 10px;
+        }
+
+        .item {
+          display: flex;
+          gap: 10px;
+          margin-top: 10px;
+
+          &.calc {
+            font-size: 20px;
+          }
+        }
+
+        .btnReserve {
+          border: none;
+          outline: none;
+          background-color: var(--color-primary-light);
+          color: #fff;
+          font-weight: 500;
+          font-size: 14px;
+          padding: 8px 12px;
+          border-radius: 2px;
+          width: 100%;
+          cursor: pointer;
+          margin-top: 30px;
+
+          &:hover {
+            background-color: var(--color-primary);
+          }
+        }
+      }
+    }
+  }
+}

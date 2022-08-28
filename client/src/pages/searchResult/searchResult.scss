@@ -1,0 +1,19 @@
+.searchResultContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 25px;
+
+  .searchResultWrapper {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+    max-width: 1024px;
+
+    .searchResults {
+      flex: 0.75;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+  }
+}

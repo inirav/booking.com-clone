@@ -1,0 +1,152 @@
+.featured {
+  display: flex;
+  justify-content: center;
+
+  &__wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    width: 100%;
+    max-width: 1024px;
+
+    .carousel {
+      &__title {
+        font-size: 20px;
+        margin-bottom: 3px;
+      }
+
+      &__subtitle {
+        font-size: 16px;
+        margin-bottom: 20px;
+        color: gray;
+      }
+
+      .slider {
+        &__item {
+          img {
+            width: 185px;
+            margin-bottom: 15px;
+            border-radius: 3px;
+          }
+
+          h3 {
+            font-size: 16px;
+          }
+
+          span {
+            font-size: 14px;
+            color: gray;
+          }
+        }
+
+        .slick-arrow::before {
+          color: gray;
+        }
+      }
+
+      &.propertyTypes {
+        .carousel__title {
+          font-size: 24px;
+          margin-bottom: 15px;
+        }
+
+        img {
+          width: 240px;
+        }
+      }
+
+      &.lovedHomes {
+        .carousel__title {
+          font-size: 24px;
+          margin-bottom: 15px;
+        }
+
+        img {
+          width: 240px;
+          height: 260px;
+        }
+
+        p {
+          font-size: 14px;
+
+          &.location {
+            color: gray;
+            margin-top: 3px;
+            margin-bottom: 8px;
+          }
+
+          &.price {
+            font-weight: bold;
+          }
+        }
+
+        .ratingContainer {
+          display: flex;
+          align-items: center;
+          margin-top: 5px;
+
+          .rating {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--color-primary);
+            color: #fff;
+            width: 28px;
+            height: 28px;
+            font-weight: 500;
+            border-radius: 5px 5px 5px 0;
+          }
+
+          .scoreTitle {
+            color: #000;
+            margin-left: 8px;
+            margin-right: 15px;
+          }
+
+          .reviews {
+            font-size: 12px;
+          }
+        }
+      }
+    }
+
+    .postcard {
+      display: flex;
+      gap: 20px;
+
+      &:not(:last-child) {
+        margin-bottom: 20px;
+      }
+
+      &__item {
+        height: 270px;
+        position: relative;
+        overflow: hidden;
+
+        img {
+          border-radius: 3px;
+        }
+      }
+
+      &__overlay {
+        width: 100%;
+        position: absolute;
+        color: #fff;
+        top: 0;
+        left: 0;
+        padding-left: 20px;
+        padding-top: 20px;
+        background: linear-gradient(to bottom, rgba(0, 27, 65, 0.65) 0, rgba(0, 27, 65, 0) 100%);
+        text-shadow: 1px 1px 1px #000;
+
+        h2 {
+          font-size: 28px;
+        }
+
+        span {
+          font-size: 16px;
+        }
+      }
+    }
+  }
+}

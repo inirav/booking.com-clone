@@ -1,0 +1,30 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 0;
+
+  &__left {
+    .brand {
+      color: #fff;
+      text-decoration: none;
+    }
+  }
+
+  &__right {
+    .btn {
+      color: var(--color-primary-light);
+      background-color: #fff;
+      padding: 7px 14px;
+      font-size: 14px;
+      text-decoration: none;
+      border: 1px solid var(--color-primary-light);
+      margin-left: 10px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: #f1f6fb;
+      }
+    }
+  }
+}
