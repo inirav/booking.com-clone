@@ -1,78 +1,107 @@
 .reserve {
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.418);
   position: fixed;
+  width: 100%;
+  height: 100%;
   top: 0;
   left: 0;
+  background-color: rgba($color: #000000, $alpha: 0.85);
   display: flex;
-  align-items: center;
+  flex-direction: column;
   justify-content: center;
-}
-
-.rContainer {
-  background-color: white;
-  padding: 20px;
-  position: relative;
-}
-
-.rClose {
-  position: absolute;
-  top: 0;
-  right: 0;
-  cursor: pointer;
-}
-
-.rItem {
-  display: flex;
   align-items: center;
-  gap: 50px;
-  padding: 20px;
-}
 
-.rInfo {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
+  .wrapper {
+    position: relative;
+  }
 
-.rTitle {
-  font-weight: 500;
-}
+  .icon {
+    cursor: pointer;
+    color: #fff;
 
-.rDesc {
-  font-weight: 300;
-}
+    &.close {
+      font-size: 24px;
+      position: absolute;
+      top: -50px;
+      right: -50px;
+      margin-top: 20px;
+      margin-right: 20px;
+    }
+  }
 
-.rMax {
-  font-size: 12px;
-}
+  .head {
+    background-color: #fff;
+    padding: 20px;
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
 
-.rPrice {
-  font-weight: 500;
-}
+  .rooms {
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+    padding: 0 20px;
+    border-radius: 2px;
 
-.rSelectRooms {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
-  font-size: 8px;
-  color: gray;
-}
+    .room {
+      padding: 20px 0;
+      display: flex;
+      align-items: center;
+      gap: 30px;
 
-.room {
-  display: flex;
-  flex-direction: column;
-}
+      &:not(:last-child) {
+        border-bottom: 1px solid lightgray;
+      }
 
-.rButton {
-  border: none;
-  padding: 10px 20px;
-  background-color: #0071c2;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-  border-radius: 5px;
-  width: 100%;
-  margin-top: 20px;
+      .info {
+        p {
+          font-size: 14px;
+        }
+      }
+
+      .room-numbers {
+        display: flex;
+        gap: 15px;
+
+        div {
+          display: flex;
+          flex-direction: column;
+          font-size: 10px;
+          letter-spacing: 0;
+
+          input:disabled {
+            cursor: not-allowed;
+          }
+        }
+      }
+    }
+  }
+
+  .footer {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+
+    .total {
+      background-color: #fff;
+      padding: 7px 10px;
+      border-radius: 2px;
+    }
+
+    button {
+      border: none;
+      outline: none;
+      background-color: var(--color-primary-light);
+      color: #fff;
+      font-weight: 500;
+      font-size: 14px;
+      padding: 8px 12px;
+      border-radius: 2px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: var(--color-primary);
+      }
+    }
+  }
 }

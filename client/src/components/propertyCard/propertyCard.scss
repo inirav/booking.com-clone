@@ -7,9 +7,12 @@
 
   &__left {
     img {
-      border-radius: 2px;
-      height: 200px;
+      min-width: 200px;
+      min-height: 200px;
       width: 200px;
+      height: 200px;
+      border-radius: 2px;
+      background-color: lightgray;
     }
   }
 

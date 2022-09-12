@@ -3,12 +3,12 @@ import './headerSearch.scss'
 import { faBed, faCalendar, faUser } from '@fortawesome/free-solid-svg-icons'
 import 'react-date-range/dist/styles.css'
 import 'react-date-range/dist/theme/default.css'
-import { useContext, useState } from 'react'
+import { useState } from 'react'
 import { DateRange } from 'react-date-range'
 import { format } from 'date-fns'
 import { useNavigate } from 'react-router-dom'
 import GuestsInputCounter from '../guestsInputCounter/GuestInputCounter'
-import { SearchContext } from '../../contexts/SearchContext'
+import queryString from 'query-string'
 
 const HeaderSearch = () => {
   const [city, setCity] = useState('')
@@ -20,19 +20,28 @@ const HeaderSearch = () => {
       key: 'selection',
     },
   ])
-  const [isShowGuestCounter, setIsShowGuestCounter] = useState(false)
   const [guests, setGuests] = useState({
     adults: 2,
     children: 0,
     rooms: 1,
   })
+  const [isShowGuestCounter, setIsShowGuestCounter] = useState(false)
 
   const navigate = useNavigate()
-  const { dispatch } = useContext(SearchContext)
 
   const handleSearch = () => {
-    dispatch({ type: 'NEW_SEARCH', payload: { city, dates, guests } })
-    navigate('/searchresults')
+    if (city === '') return
+
+    const query = {
+      city,
+      checkin_date: format(dates[0].startDate, 'yyyy-MM-dd'),
+      checkout_date: format(dates[0].endDate, 'yyyy-MM-dd'),
+      adults: guests.adults,
+      children: guests.children,
+      rooms: guests.rooms,
+    }
+
+    navigate(`/searchresults?${queryString.stringify(query, { sort: false })}`)
   }
 
   return (

@@ -1,103 +1,97 @@
+import { faXmarkCircle } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCircleXmark } from '@fortawesome/free-solid-svg-icons'
 import './reserve.scss'
 import useFetch from '../../hooks/useFetch'
-import { useContext, useState } from 'react'
-import { SearchContext } from '../../contexts/SearchContext'
+import { useLocation } from 'react-router-dom'
+import queryString from 'query-string'
+import getDates from '../../utils/getDates'
+import { useState } from 'react'
 import axios from 'axios'
-import { useNavigate } from 'react-router-dom'
+import toast, { Toaster } from 'react-hot-toast'
 
-const Reserve = ({ setOpen, hotelId }) => {
+const Reserve = ({ setIsShowReserve, hotelId }) => {
   const [selectedRooms, setSelectedRooms] = useState([])
-  const { data } = useFetch(`/hotels/room/630245bd8654506eb0ea07e4`)
-  console.log(data)
-  const { dates } = useContext(SearchContext)
+  const location = useLocation()
+  const query = queryString.parse(location.search)
 
-  console.log(data)
+  const { data: rooms } = useFetch(`/hotels/room/${hotelId}`)
 
-  const getDatesInRange = (startDate, endDate) => {
-    const start = new Date(startDate)
-    const end = new Date(endDate)
+  const dates = getDates(new Date(query.checkin_date), new Date(query.checkout_date))
 
-    const date = new Date(start.getTime())
-    const dates = []
+  const isRoomAvailable = (unavailableDates) =>
+    !unavailableDates.some((date) => dates.includes(new Date(date).getTime()))
 
-    while (date <= end) {
-      dates.push(new Date(date).getTime())
-      date.setDate(date.getDate() + 1)
-    }
-
-    return dates
-  }
-
-  const alldates = getDatesInRange(dates[0].startDate, dates[0].endDate)
-
-  const isAvailable = (roomNumber) => {
-    const isFound = roomNumber.unavailableDates.some((date) =>
-      alldates.includes(new Date(date).getTime())
-    )
-
-    return !isFound
-  }
-
-  const handleSelect = (e) => {
+  const handleSelection = (e) => {
+    const id = e.target.value
     const checked = e.target.checked
-    const value = e.target.value
-    setSelectedRooms(
-      checked ? [...selectedRooms, value] : selectedRooms.filter((item) => item !== value)
-    )
+
+    setSelectedRooms(checked ? [...selectedRooms, id] : selectedRooms.filter((el) => el !== id))
   }
 
-  const navigate = useNavigate()
+  const handleReservation = async () => {
+    if (selectedRooms.length === 0) return
 
-  const handleClick = async () => {
     try {
       await Promise.all(
-        selectedRooms.map((roomId) => {
-          const res = axios.put(`/rooms/availability/${roomId}`, {
-            dates: alldates,
-          })
-          return res.data
-        })
+        selectedRooms.map((roomId) => axios.put(`/rooms/availability/${roomId}`, { dates }))
       )
-      setOpen(false)
-      navigate('/')
-    } catch (err) {}
+      setIsShowReserve(false)
+      toast.success('Hotel room(s) reserved successfully')
+    } catch (error) {
+      toast.error('Something went wrong!')
+    }
   }
+
   return (
     <div className="reserve">
-      <div className="rContainer">
-        <FontAwesomeIcon icon={faCircleXmark} className="rClose" onClick={() => setOpen(false)} />
-        <span>Select your rooms:</span>
-        {data.map((item) => (
-          <div className="rItem" key={item._id}>
-            <div className="rItemInfo">
-              <div className="rTitle">{item.title}</div>
-              <div className="rDesc">{item.desc}</div>
-              <div className="rMax">
-                Max people: <b>{item.maxPeople}</b>
-              </div>
-              <div className="rPrice">{item.price}</div>
-            </div>
-            <div className="rSelectRooms">
-              {item.roomNumbers.map((roomNumber) => (
-                <div className="room">
-                  <label>{roomNumber.number}</label>
-                  <input
-                    type="checkbox"
-                    value={roomNumber._id}
-                    onChange={handleSelect}
-                    disabled={!isAvailable(roomNumber)}
-                  />
+      <div className="wrapper">
+        <FontAwesomeIcon
+          icon={faXmarkCircle}
+          className="icon close"
+          onClick={() => setIsShowReserve(false)}
+        />
+
+        <div className="head">
+          <h3>Select your rooms:</h3>
+        </div>
+        <div className="rooms">
+          {rooms &&
+            rooms.map((room) => (
+              <div className="room" key={room._id}>
+                <div className="info">
+                  <h4>{room.name}</h4>
+                  <p>{room.desc}</p>
+                  <p>
+                    Price: <b>$ {room.price}</b>
+                  </p>
                 </div>
-              ))}
-            </div>
+                <div className="room-numbers">
+                  {room.roomNumbers?.map((roomNumber, index) => (
+                    <div key={index}>
+                      <label>{roomNumber.number}</label>
+                      <input
+                        type="checkbox"
+                        value={roomNumber._id}
+                        onChange={handleSelection}
+                        disabled={!isRoomAvailable(roomNumber.unavailableDates)}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+        </div>
+        <div className="footer">
+          <div className="total">
+            <span>
+              Total Price: <b>$ 3000</b>
+            </span>
           </div>
-        ))}
-        <button onClick={handleClick} className="rButton">
-          Reserve Now!
-        </button>
+          <button onClick={handleReservation}>I'll Reserve</button>
+        </div>
       </div>
+
+      <Toaster />
     </div>
   )
 }

@@ -4,20 +4,40 @@ import { faCalendar, faMagnifyingGlass, faUser } from '@fortawesome/free-solid-s
 import { format } from 'date-fns'
 import { DateRange } from 'react-date-range'
 import GuestsInputCounter from '../../components/guestsInputCounter/GuestInputCounter'
-import { useContext, useState } from 'react'
-import { SearchContext } from '../../contexts/SearchContext'
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import queryString from 'query-string'
 
-const SearchBox = () => {
-  const { city: _city, dates: _dates, guests: _guests, dispatch } = useContext(SearchContext)
-
-  const [city, setCity] = useState(_city)
-  const [dates, setDates] = useState(_dates)
-  const [guests, setGuests] = useState(_guests)
+const SearchBox = ({ query }) => {
+  const [city, setCity] = useState(query?.city || '')
+  const [dates, setDates] = useState([
+    {
+      startDate: new Date(query?.checkin_date),
+      endDate: new Date(query?.checkout_date),
+      key: 'selection',
+    },
+  ])
+  const [guests, setGuests] = useState({
+    adults: query?.adults || 2,
+    children: query?.children || 0,
+    rooms: query?.rooms || 1,
+  })
   const [isShowDateRangePicker, setIsShowDateRangePicker] = useState(false)
   const [isShowGuestCounter, setIsShowGuestCounter] = useState(false)
 
+  const navigate = useNavigate()
+
   const handleSearch = () => {
-    dispatch({ type: 'NEW_SEARCH', payload: { city, dates, guests } })
+    const query = {
+      city,
+      checkin_date: format(dates[0].startDate, 'yyyy-MM-dd'),
+      checkout_date: format(dates[0].endDate, 'yyyy-MM-dd'),
+      adults: guests.adults,
+      children: guests.children,
+      rooms: guests.rooms,
+    }
+
+    navigate(`/searchresults?${queryString.stringify(query, { sort: false })}`)
   }
 
   return (

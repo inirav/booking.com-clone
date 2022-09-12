@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Fragment, useContext, useState } from 'react'
+import { Fragment, useState } from 'react'
 import Footer from '../../components/footer/Footer'
 import Header from '../../components/header/Header'
 import './hotel.scss'
@@ -8,19 +8,21 @@ import { photos } from '../../data/dummy'
 import { Gallery } from '../../components/gallery/Gallery'
 import useFetch from '../../hooks/useFetch'
 import { useLocation } from 'react-router-dom'
-import { SearchContext } from '../../contexts/SearchContext'
-import differenceInDays from 'date-fns/differenceInDays/index.js'
+import queryString from 'query-string'
+import Reserve from '../../components/reserve/Reserve'
 
 const Hotel = () => {
   const [isShowGallery, setIsShowGallery] = useState(false)
+  const [isShowReserve, setIsShowReserve] = useState(false)
 
   const location = useLocation()
   const hotelId = location.pathname.split('/')[2]
 
   const { data: hotel, loading } = useFetch(`/hotels/find/${hotelId}`)
 
-  const { dates, guests } = useContext(SearchContext)
-  const nights = Math.abs(differenceInDays(dates[0].startDate, dates[0].endDate)) + 1
+  const query = queryString.parse(location.search)
+  const nights = query?.nights || 1
+  const rooms = query?.rooms || 1
 
   return (
     <Fragment>
@@ -39,7 +41,9 @@ const Hotel = () => {
                     </div>
                   </div>
                   <div>
-                    <button className="btnReserve">Reserve</button>
+                    <button className="btnReserve" onClick={() => setIsShowReserve(true)}>
+                      Reserve
+                    </button>
                   </div>
                 </div>
                 <div className="photos">
@@ -67,13 +71,15 @@ const Hotel = () => {
                       </span>
                     </div>
                     <div className="item calc">
-                      <b>$ {hotel.cheapestPrice * guests.rooms * nights}</b>{' '}
+                      <b>$ {hotel.cheapestPrice * rooms * nights}</b>{' '}
                       <small>
-                        [{guests.rooms} room(s), {nights} night(s)]
+                        ({rooms} room{rooms > 1 && 's'}, {nights} night{nights > 1 && 's'})
                       </small>
                     </div>
 
-                    <button className="btnReserve">Reserve</button>
+                    <button className="btnReserve" onClick={() => setIsShowReserve(true)}>
+                      Reserve
+                    </button>
                   </div>
                 </div>
               </div>
@@ -82,6 +88,7 @@ const Hotel = () => {
       <Footer />
 
       {isShowGallery && <Gallery photos={photos} setIsShowGallery={setIsShowGallery} />}
+      {isShowReserve && <Reserve setIsShowReserve={setIsShowReserve} hotelId={hotelId} />}
     </Fragment>
   )
 }

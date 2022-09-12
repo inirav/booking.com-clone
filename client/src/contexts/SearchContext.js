@@ -1,12 +1,18 @@
 import { createContext, useReducer } from 'react'
 
 const INITIAL_STATE = {
-  city: undefined,
-  dates: [],
+  city: '',
+  dates: [
+    {
+      startDate: new Date(),
+      endDate: new Date(),
+      key: 'selection',
+    },
+  ],
   guests: {
-    adults: undefined,
-    childern: undefined,
-    rooms: undefined,
+    adults: 2,
+    childern: 0,
+    rooms: 1,
   },
 }
 
