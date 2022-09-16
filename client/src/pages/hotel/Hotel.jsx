@@ -7,9 +7,12 @@ import { faBed, faLocationDot } from '@fortawesome/free-solid-svg-icons'
 import { photos } from '../../data/dummy'
 import { Gallery } from '../../components/gallery/Gallery'
 import useFetch from '../../hooks/useFetch'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import queryString from 'query-string'
 import Reserve from '../../components/reserve/Reserve'
+import { Toaster } from 'react-hot-toast'
+import { useContext } from 'react'
+import { AuthContext } from '../../contexts/AuthContext'
 
 const Hotel = () => {
   const [isShowGallery, setIsShowGallery] = useState(false)
@@ -23,6 +26,15 @@ const Hotel = () => {
   const query = queryString.parse(location.search)
   const nights = query?.nights || 1
   const rooms = query?.rooms || 1
+
+  const { user } = useContext(AuthContext)
+  const navigate = useNavigate()
+
+  const handleShowReserve = () => {
+    if (!user) navigate('/login')
+
+    setIsShowReserve(true)
+  }
 
   return (
     <Fragment>
@@ -41,7 +53,7 @@ const Hotel = () => {
                     </div>
                   </div>
                   <div>
-                    <button className="btnReserve" onClick={() => setIsShowReserve(true)}>
+                    <button className="btnReserve" onClick={handleShowReserve}>
                       Reserve
                     </button>
                   </div>
@@ -55,7 +67,10 @@ const Hotel = () => {
                   </div>
                 </div>
                 <div className="description">
-                  <div className="text">{hotel.description}</div>
+                  {hotel.description && (
+                    <div className="text" dangerouslySetInnerHTML={{ __html: hotel.description }} />
+                  )}
+
                   <div className="property-highlights">
                     <h3 className="title">Property Highlights</h3>
                     <div className="bold">Perfect for an {nights}-night stay!</div>
@@ -77,7 +92,7 @@ const Hotel = () => {
                       </small>
                     </div>
 
-                    <button className="btnReserve" onClick={() => setIsShowReserve(true)}>
+                    <button className="btnReserve" onClick={handleShowReserve}>
                       Reserve
                     </button>
                   </div>
@@ -89,6 +104,7 @@ const Hotel = () => {
 
       {isShowGallery && <Gallery photos={photos} setIsShowGallery={setIsShowGallery} />}
       {isShowReserve && <Reserve setIsShowReserve={setIsShowReserve} hotelId={hotelId} />}
+      <Toaster />
     </Fragment>
   )
 }
