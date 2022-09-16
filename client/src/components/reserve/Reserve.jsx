@@ -7,7 +7,7 @@ import queryString from 'query-string'
 import getDates from '../../utils/getDates'
 import { useState } from 'react'
 import axios from 'axios'
-import toast, { Toaster } from 'react-hot-toast'
+import toast from 'react-hot-toast'
 
 const Reserve = ({ setIsShowReserve, hotelId }) => {
   const [selectedRooms, setSelectedRooms] = useState([])
@@ -90,8 +90,6 @@ const Reserve = ({ setIsShowReserve, hotelId }) => {
           <button onClick={handleReservation}>I'll Reserve</button>
         </div>
       </div>
-
-      <Toaster />
     </div>
   )
 }
