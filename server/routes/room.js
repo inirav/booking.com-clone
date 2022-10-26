@@ -7,14 +7,16 @@ import {
   updateRoom,
   updateRoomAvailability,
 } from '../controllers/room.js'
-import { verifyAdmin } from '../utils/verify.js'
+import { isAdmin, verifyToken } from '../middlewares/auth.js'
 
 const router = Router()
 
-router.post('/', verifyAdmin, createRoom)
-router.put('/:id', verifyAdmin, updateRoom)
-router.put('/availability/:id', updateRoomAvailability)
-router.delete('/:id', verifyAdmin, deleteRoom)
+router.post('/', isAdmin, createRoom)
+router.put('/:id', isAdmin, updateRoom)
+router.delete('/:id', isAdmin, deleteRoom)
+
+router.put('/availability/:id', verifyToken, updateRoomAvailability)
+
 router.get('/:id', getRoom)
 router.get('/', getRooms)
 

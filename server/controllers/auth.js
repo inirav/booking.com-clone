@@ -28,7 +28,7 @@ export const login = async (req, res, next) => {
     const token = jwt.sign({ id: user._id, isAdmin: user.isAdmin }, process.env.JWT_SECRET)
 
     delete user._doc.password
-    res.cookie('accessToken', token, { httpOnly: true }).json(user)
+    res.json({ accessToken: token, user })
   } catch (error) {
     next(error)
   }

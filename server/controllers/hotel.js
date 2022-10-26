@@ -2,10 +2,23 @@ import Hotel from '../models/Hotel.js'
 import Room from '../models/Room.js'
 
 export const createHotel = async (req, res, next) => {
-  const hotel = new Hotel(req.body)
+  const roomsPayload = req.body.rooms.map((room) => ({
+    ...room,
+    roomNumbers: room.roomNumbers.map((roomNumber) => ({ number: roomNumber })),
+  }))
+
+  const roomIds = []
+  try {
+    const savedRooms = await Room.insertMany(roomsPayload)
+    roomIds = savedRooms.map((room) => room._id)
+  } catch (error) {
+    return next(error)
+  }
+
+  const hotelPayload = { ...req.body, rooms: roomIds }
 
   try {
-    const savedHotel = await hotel.save()
+    const savedHotel = await Hotel.create(hotelPayload)
     res.json(savedHotel)
   } catch (error) {
     next(error)
@@ -37,7 +50,8 @@ export const deleteHotel = async (req, res, next) => {
 export const getHotel = async (req, res, next) => {
   try {
     const hotel = await Hotel.findById(req.params.id)
-    res.json(hotel)
+    const rooms = await Room.find({ _id: { $in: hotel.rooms } })
+    res.json({ ...hotel._doc, rooms })
   } catch (error) {
     next(error)
   }
@@ -45,7 +59,7 @@ export const getHotel = async (req, res, next) => {
 
 export const getHotels = async (req, res, next) => {
   try {
-    const hotels = await Hotel.find(req.query).limit(req.query?.limit || 20)
+    const hotels = await Hotel.find(req.query)
     res.json(hotels)
   } catch (error) {
     next(error)
@@ -83,12 +97,8 @@ export const countByPropertyTypes = async (req, res, next) => {
 export const getHotelRooms = async (req, res, next) => {
   try {
     const hotel = await Hotel.findById(req.params.id)
-    const list = await Promise.all(
-      hotel.rooms.map((room) => {
-        return Room.findById(room)
-      })
-    )
-    res.status(200).json(list)
+    const rooms = await Room.find({ _id: { $in: hotel._doc.rooms } })
+    res.json(rooms)
   } catch (err) {
     next(err)
   }

@@ -1,12 +1,12 @@
 import { Router } from 'express'
 import { deleteUser, getUser, getUsers, updateUser } from '../controllers/user.js'
-import { verifyAdmin, verifyUser } from '../utils/verify.js'
+import { isAdmin, isPermitted } from '../middlewares/auth.js'
 
 const router = Router()
 
-router.put('/:id', verifyUser, updateUser)
-router.delete('/:id', verifyUser, deleteUser)
-router.get('/:id', verifyUser, getUser)
-router.get('/', verifyAdmin, getUsers)
+router.put('/:id', isPermitted, updateUser)
+router.delete('/:id', isPermitted, deleteUser)
+router.get('/:id', isPermitted, getUser)
+router.get('/', isAdmin, getUsers)
 
 export default router

@@ -6,6 +6,7 @@ const userSchema = new mongoose.Schema(
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true, select: false },
     isAdmin: { type: Boolean, default: false },
+    avatar: { type: String, default: 'https://randomuser.me/api/portraits/lego/1.jpg' },
   },
   { timestamps: true }
 )
