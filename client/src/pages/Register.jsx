@@ -1,7 +1,7 @@
-import axios from 'axios'
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import '../auth.scss'
+import { Link, useNavigate } from 'react-router-dom'
+import '../styles/auth.scss'
+import api from '../utils/api'
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -25,7 +25,7 @@ const Register = () => {
     setLoading(true)
 
     try {
-      await axios.post('/auth/register', formData)
+      await api.post('/auth/register', formData)
       navigate('/login')
     } catch (error) {
       setError(error)
@@ -38,7 +38,9 @@ const Register = () => {
     <div className="auth">
       <div className="auth-inner">
         <h2>Register</h2>
+
         {error && <div className="alert error">{error.message}</div>}
+
         <form onSubmit={handleForm}>
           <div className="input-field">
             <label>Username</label>
@@ -61,7 +63,13 @@ const Register = () => {
             Register
           </button>
         </form>
+
+        <p style={{ fontSize: '12px', marginTop: '15px' }}>
+          Already have an account? <Link to="/login">Login</Link>
+        </p>
+
         <hr />
+
         <div className="copyright">
           <p>All rights reserved.</p>
           <p>Copyright (2006 - 2022) - Booking.com™</p>

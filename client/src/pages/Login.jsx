@@ -1,16 +1,18 @@
 import { useContext } from 'react'
 import { useState } from 'react'
-import '../auth.scss'
+import '../styles/auth.scss'
 import { AuthContext } from '../contexts/AuthContext'
-import axios from 'axios'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import api from '../utils/api'
 
 const Login = () => {
   const [credentials, setCredentials] = useState({
     username: '',
     password: '',
   })
-  const { loading, error, dispatch } = useContext(AuthContext)
+  const [error, setError] = useState(null)
+  const [loading, setLoading] = useState(false)
+  const { dispatch } = useContext(AuthContext)
   const navigate = useNavigate()
 
   const handleChange = (e) => {
@@ -19,22 +21,26 @@ const Login = () => {
 
   const handleForm = async (e) => {
     e.preventDefault()
-    dispatch({ type: 'LOGIN_START' })
+    setLoading(true)
 
     try {
-      const res = await axios.post('/auth/login', credentials)
-      dispatch({ type: 'LOGIN_SUCCESS', payload: res.data })
+      const res = await api.post('/auth/login', credentials)
+      dispatch({ type: 'LOGIN', payload: res.data })
       navigate('/')
     } catch (error) {
-      dispatch({ type: 'LOGIN_FAILURE', payload: error.response.data })
+      setError(error)
     }
+
+    setLoading(false)
   }
 
   return (
     <div className="auth">
       <div className="auth-inner">
         <h2>Log In</h2>
-        {error && <div className="alert error">{error.message}</div>}
+
+        {error && <div className="alert error">{error}</div>}
+
         <form onSubmit={handleForm}>
           <div className="input-field">
             <label>Username</label>
@@ -49,6 +55,11 @@ const Login = () => {
             Login
           </button>
         </form>
+
+        <p style={{ fontSize: '12px', marginTop: '15px' }}>
+          Don't have an account yet? <Link to="/register">Create account</Link>
+        </p>
+
         <hr />
         <div className="copyright">
           <p>All rights reserved.</p>

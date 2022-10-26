@@ -1,51 +1,32 @@
-import { createContext, useEffect, useReducer } from 'react'
+import React, { createContext, useReducer } from 'react'
 
 const INITIAL_STATE = {
-  user: JSON.parse(localStorage.getItem('user')) || null,
-  loading: false,
-  error: null,
+  isAuthenticated: false,
+  accessToken: '',
+  user: null,
 }
 
-export const AuthContext = createContext(INITIAL_STATE)
+export const AuthContext = createContext({ state: INITIAL_STATE, dispatch: () => null })
 
-const AuthReducer = (state, action) => {
+const reducer = (state, action) => {
   switch (action.type) {
-    case 'LOGIN_START':
+    case 'LOGIN':
+      localStorage.setItem('accessToken', action.payload.accessToken)
       return {
-        user: null,
-        loading: true,
-        error: null,
-      }
-    case 'LOGIN_SUCCESS':
-      return {
-        user: action.payload,
-        loading: false,
-        error: null,
-      }
-    case 'LOGIN_FAILURE':
-      return {
-        user: null,
-        loading: false,
-        error: action.payload,
+        isAuthenticated: true,
+        accessToken: action.payload.accessToken,
+        user: action.payload.user,
       }
     case 'LOGOUT':
-      return {
-        user: null,
-        loading: false,
-        error: null,
-      }
-
+      localStorage.clear()
+      return { ...state, isAuthenticated: false }
     default:
       return state
   }
 }
 
 export const AuthContextProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(AuthReducer, INITIAL_STATE)
+  const [state, dispatch] = useReducer(reducer, INITIAL_STATE)
 
-  useEffect(() => {
-    localStorage.setItem('user', JSON.stringify(state.user))
-  }, [state.user])
-
-  return <AuthContext.Provider value={{ ...state, dispatch }}>{children}</AuthContext.Provider>
+  return <AuthContext.Provider value={{ state, dispatch }}>{children}</AuthContext.Provider>
 }

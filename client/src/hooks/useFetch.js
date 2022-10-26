@@ -1,5 +1,5 @@
-import axios from 'axios'
 import { useEffect, useState } from 'react'
+import api from '../utils/api'
 
 const useFetch = (url) => {
   const [loading, setLoading] = useState(false)
@@ -9,7 +9,7 @@ const useFetch = (url) => {
   const fetchData = async (url) => {
     setLoading(true)
     try {
-      const res = await axios.get(url)
+      const res = await api.get(url)
       setData(res.data)
     } catch (error) {
       setError(error)
