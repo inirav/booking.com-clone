@@ -29,4 +29,11 @@ const authMiddleware = async (req: Request, res: Response, next: NextFunction) =
   }
 }
 
+const isAdminMiddleware = (req: Request, res: Response, next: NextFunction) => {
+  !(req as RequestWithUser).user.isAdmin && next(new HttpException(403, 'Not authorized'))
+  next()
+}
+
+export const isAdmin = [authMiddleware, isAdminMiddleware]
+
 export default authMiddleware

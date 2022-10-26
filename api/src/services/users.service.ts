@@ -27,7 +27,7 @@ class UserService {
       username: userData.username,
     })
     if (findUserWithUsername)
-      throw new HttpException(409, `This username ${userData.email} already exists`)
+      throw new HttpException(409, `This username ${userData.username} already exists`)
 
     const findUserWithEmail: User | null = await userModel.findOne({ email: userData.email })
     if (findUserWithEmail)

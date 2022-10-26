@@ -31,8 +31,9 @@ class UsersController {
     try {
       const userData: CreateUserDto = req.body
       const createUserData: User = await this.userService.createUser(userData)
+      const { password, ...user } = createUserData.toObject()
 
-      res.status(201).json(createUserData)
+      res.status(201).json(user)
     } catch (error) {
       next(error)
     }
@@ -43,8 +44,9 @@ class UsersController {
       const userId: string = req.params.id
       const userData: CreateUserDto = req.body
       const updateUserData: User = await this.userService.updateUser(userId, userData)
+      const { password, ...user } = updateUserData.toObject()
 
-      res.status(200).json(updateUserData)
+      res.status(200).json(user)
     } catch (error) {
       next(error)
     }
