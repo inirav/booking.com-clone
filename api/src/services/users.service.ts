@@ -7,14 +7,15 @@ import { isEmpty } from '../utils/util'
 
 class UserService {
   public async findAllUser(): Promise<User[]> {
-    const users: User[] = await userModel.find()
+    const users: User[] = await userModel.find().select('-password')
+
     return users
   }
 
   public async findUserById(userId: string): Promise<User> {
     if (isEmpty(userId)) throw new HttpException(400, 'UserId is empty')
 
-    const findUser: User | null = await userModel.findOne({ _id: userId })
+    const findUser: User | null = await userModel.findOne({ _id: userId }).select('-password')
     if (!findUser) throw new HttpException(409, "User doesn't exist")
 
     return findUser
@@ -45,7 +46,7 @@ class UserService {
     if (userData.username) {
       const findUser: User | null = await userModel.findOne({ username: userData.username })
       if (findUser && findUser._id != userId)
-        throw new HttpException(409, `This email ${userData.username} already exists`)
+        throw new HttpException(409, `This username ${userData.username} already exists`)
     }
 
     if (userData.email) {
@@ -59,15 +60,17 @@ class UserService {
       userData = { ...userData, password: hashedPassword }
     }
 
-    const updateUserById: User | null = await userModel.findByIdAndUpdate(userId, { userData })
-    if (!updateUserById) throw new HttpException(409, "User doesn't exist")
+    const updateUserById: User | null = await userModel.findByIdAndUpdate(userId, userData, {
+      new: true,
+    })
+    if (!updateUserById) throw new HttpException(400, "User doesn't exist")
 
     return updateUserById
   }
 
   public async deleteUser(userId: string): Promise<User> {
     const deleteUserById: User | null = await userModel.findByIdAndDelete(userId)
-    if (!deleteUserById) throw new HttpException(409, "User doesn't exist")
+    if (!deleteUserById) throw new HttpException(400, "User doesn't exist")
 
     return deleteUserById
   }
