@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from 'express'
 import { CreateUserDto } from '../dtos/users.dto'
 import { User } from '../interfaces/users.interface'
-import userService from '../services/users.service'
+import UserService from '../services/users.service'
 
 class UsersController {
-  public userService = new userService()
+  private userService = new UserService()
 
   public getUsers = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -57,7 +57,7 @@ class UsersController {
       const userId: string = req.params.id
       await this.userService.deleteUser(userId)
 
-      res.status(204).json(null)
+      res.sendStatus(204)
     } catch (error) {
       next(error)
     }

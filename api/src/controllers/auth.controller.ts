@@ -35,8 +35,8 @@ class AuthController {
   public logOut = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const userData: User = (req as RequestWithUser).user
-      const logOutUserData: User = await this.authService.logout(userData)
-      res.status(200).json(logOutUserData)
+      await this.authService.logout(userData)
+      res.sendStatus(204)
     } catch (error) {
       next(error)
     }
