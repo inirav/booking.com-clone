@@ -1,9 +1,11 @@
+import UserRoles from '../constants/userRoles'
+
 export interface User {
   _id: string
   username: string
   email: string
   password: string
-  isAdmin: boolean
+  role: UserRoles
   avatar: string
   toObject: () => User
 }
