@@ -1,4 +1,5 @@
 import { model, Schema, Document } from 'mongoose'
+import UserRoles from '../constants/userRoles'
 import { User } from '../interfaces/users.interface'
 
 const userSchema: Schema = new Schema(
@@ -16,11 +17,10 @@ const userSchema: Schema = new Schema(
     password: {
       type: String,
       required: true,
-      select: false,
     },
-    isAdmin: {
-      type: Boolean,
-      default: false,
+    role: {
+      type: String,
+      default: UserRoles.USER,
     },
     avatar: {
       type: String,
