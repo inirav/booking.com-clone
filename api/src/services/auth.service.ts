@@ -59,7 +59,7 @@ class AuthService {
     const secretKey = JWT_SECRET as string
     const expiresIn: number = 60 * 60
 
-    return { expiresIn, token: sign(dataStoredInToken, secretKey, { expiresIn }) }
+    return { expiresIn, token: sign(dataStoredInToken, secretKey) } // add expiresIn
   }
 }
 
