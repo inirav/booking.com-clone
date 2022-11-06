@@ -1,5 +1,5 @@
 import React, { createContext, useReducer } from 'react'
-import User from '../types/User'
+import { User } from '../interfaces/users'
 
 type State = {
   isAuthenticated: boolean

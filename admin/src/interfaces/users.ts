@@ -1,9 +1,7 @@
-interface User {
+export interface User {
   _id: string
   username: string
   email: string
-  isAdmin: boolean
+  role: string
   avatar: string
 }
-
-export default User

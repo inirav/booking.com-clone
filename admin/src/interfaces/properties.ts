@@ -1,21 +1,20 @@
-import Room from './Room'
+import Room from './rooms'
 
-export interface Hotel {
+export interface Property {
   _id: string
   name: string
   type: string
   city: string
   address: string
-  description: string
+  desc: string
   cheapestPrice: number
   rating: number
-  photos: string[]
+  images: string[]
   rooms: Room[]
-  featured: boolean
   reviews: number
   distance: number
   freeAirportTaxi: boolean
   freeCancellation: boolean
   highlights: string
 }
-export default Hotel
+export default Property
