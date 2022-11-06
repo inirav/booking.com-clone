@@ -7,7 +7,7 @@ import { Container } from './styles'
 import { Image } from './types'
 import { v4 as uuid } from 'uuid'
 import extractPublicId from '../../utils/extractPublicId'
-import { deleteObject } from '../../services/object'
+import { deleteImage } from '../../services/uploads'
 
 type Props = {
   isError: boolean
@@ -71,7 +71,7 @@ const ImageUploadWidget = ({ name, value }: Props) => {
       <Preview
         images={images}
         onDelete={(id) => {
-          deleteObject(id)
+          deleteImage(id)
           setImages((prev) => prev.filter((image) => image.id !== id))
           setFieldValue(
             name,
