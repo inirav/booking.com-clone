@@ -35,7 +35,7 @@ class PropertiesController {
 
         res.status(200).json(totalCount)
       } else {
-        const propertiesData = await this.propertyService.findProperties()
+        const propertiesData = await this.propertyService.findProperties(filters)
 
         res.status(200).json(propertiesData)
       }
