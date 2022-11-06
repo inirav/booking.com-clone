@@ -14,7 +14,7 @@ const Reserve = ({ setIsShowReserve, hotelId }) => {
   const location = useLocation()
   const query = queryString.parse(location.search)
 
-  const { data: rooms } = useFetch(`/hotels/room/${hotelId}`)
+  const { data: rooms } = useFetch(`/properties/${hotelId}/rooms`)
 
   const dates = getDates(new Date(query.checkin_date), new Date(query.checkout_date))
 

@@ -8,12 +8,12 @@ import getRatingTitle from '../../utils/getRatingTitle'
 
 const Featured = () => {
   const { data: countByCities } = useFetch(
-    '/hotels/countByCities?cities=goa,mumbai,new delhi,lonavala,bangaluru,jaipur,pondicherry'
+    '/properties?countByCities=goa,mumbai,new delhi,lonavala,bangaluru,jaipur,pondicherry'
   )
   const { data: countByPropertyTypes } = useFetch(
-    '/hotels/countByPropertyTypes?types=hotel,apartment,resort,villa,cabin,cottage'
+    '/properties?countByPropertyTypes=hotel,apartment,resort,villa,cabin,cottage'
   )
-  const { data: featuredHotels } = useFetch('/hotels?featured=true&limit=5')
+  const { data: featuredHotels } = useFetch('/properties?featured=true&limit=5')
 
   return (
     <div className="featured">
@@ -116,7 +116,7 @@ const Featured = () => {
               {featuredHotels &&
                 featuredHotels.map((hotel) => (
                   <div className="slider__item" key={hotel._id}>
-                    <img src={hotel.photos[0]} alt={hotel.name} />
+                    <img src={hotel.images[0]} alt={hotel.name} />
                     <p>{hotel.name}</p>
                     <p className="location">{hotel.city}</p>
                     <p className="price">Starting from ${hotel.cheapestPrice}</p>

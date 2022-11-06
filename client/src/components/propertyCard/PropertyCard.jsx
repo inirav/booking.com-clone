@@ -23,7 +23,7 @@ const PropertyCard = ({ hotel, query }) => {
     <div className="propertyCard">
       <div className="propertyCard__left">
         <Link to={hotelLink}>
-          <img src={hotel.photos[0]} alt={hotel.name} />
+          <img src={hotel.images[0]} alt={hotel.name} />
         </Link>
       </div>
       <div className="propertyCard__right">

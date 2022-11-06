@@ -1,4 +1,6 @@
-const getRatingTitle = (rating = 0) => {
+const getRatingTitle = (rating = -1) => {
+  if (rating === -1) return 'No Rating'
+
   if (rating >= 9) return 'Excellent'
   else if (rating >= 8) return 'Very Good'
   else if (rating >= 7) return 'Good'

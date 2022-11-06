@@ -7,12 +7,10 @@ import { faBed, faLocationDot } from '@fortawesome/free-solid-svg-icons'
 import { photos } from '../../data/dummy'
 import { Gallery } from '../../components/gallery/Gallery'
 import useFetch from '../../hooks/useFetch'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import queryString from 'query-string'
 import Reserve from '../../components/reserve/Reserve'
 import { Toaster } from 'react-hot-toast'
-import { useContext } from 'react'
-import { AuthContext } from '../../contexts/AuthContext'
 
 const Hotel = () => {
   const [isShowGallery, setIsShowGallery] = useState(false)
@@ -21,18 +19,13 @@ const Hotel = () => {
   const location = useLocation()
   const hotelId = location.pathname.split('/')[2]
 
-  const { data: hotel, loading } = useFetch(`/hotels/find/${hotelId}`)
+  const { data: hotel, loading } = useFetch(`/properties/${hotelId}`)
 
   const query = queryString.parse(location.search)
   const nights = query?.nights || 1
   const rooms = query?.rooms || 1
 
-  const { user } = useContext(AuthContext)
-  const navigate = useNavigate()
-
   const handleShowReserve = () => {
-    if (!user) navigate('/login')
-
     setIsShowReserve(true)
   }
 
@@ -59,7 +52,7 @@ const Hotel = () => {
                   </div>
                 </div>
                 <div className="photos">
-                  {hotel.photos.slice(0, 5).map((photo, index) => (
+                  {hotel.images.slice(0, 5).map((photo, index) => (
                     <img src={photo} alt="" key={index} onClick={() => setIsShowGallery(true)} />
                   ))}
                   <div className="more" onClick={() => setIsShowGallery(true)}>
@@ -67,8 +60,8 @@ const Hotel = () => {
                   </div>
                 </div>
                 <div className="description">
-                  {hotel.description && (
-                    <div className="text" dangerouslySetInnerHTML={{ __html: hotel.description }} />
+                  {hotel.desc && (
+                    <div className="text" dangerouslySetInnerHTML={{ __html: hotel.desc }} />
                   )}
 
                   <div className="property-highlights">

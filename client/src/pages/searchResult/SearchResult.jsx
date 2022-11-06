@@ -13,7 +13,7 @@ import { useLocation } from 'react-router-dom'
 const SearchResult = () => {
   const location = useLocation()
   const query = queryString.parse(location.search)
-  const { data: hotels, loading } = useFetch(`/hotels?city=${query.city}&limit=10`)
+  const { data: hotels, loading } = useFetch(`/properties?city=${query.city}&limit=10`)
 
   return (
     <Fragment>

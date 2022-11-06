@@ -7,17 +7,17 @@ import SearchResult from './pages/searchResult/SearchResult'
 
 function App() {
   return (
-    <div>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/searchresults" element={<SearchResult />} />
-          <Route path="/hotel/:id" element={<Hotel />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-        </Routes>
-      </BrowserRouter>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/">
+          <Route index element={<Home />} />
+          <Route path="login" element={<Login />} />
+          <Route path="register" element={<Register />} />
+          <Route path="searchresults" element={<SearchResult />} />
+          <Route path="hotel/:id" element={<Hotel />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   )
 }
 
