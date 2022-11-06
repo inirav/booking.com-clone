@@ -5,7 +5,7 @@ import { BiTrash } from 'react-icons/bi'
 import Table from '../../components/Table'
 import TableActionCell from '../../components/TableActionCell'
 import { AuthContext } from '../../contexts/AuthContext'
-import User from '../../types/User'
+import { getUsers } from '../../services/users'
 import api from '../../utils/api'
 
 type Props = {}
@@ -13,11 +13,7 @@ type Props = {}
 const Users = (props: Props) => {
   const { state } = useContext(AuthContext)
   const { user: currentUser } = state
-  const {
-    data: users,
-    isSuccess,
-    refetch,
-  } = useQuery(['users'], (): Promise<User[]> => api.get('/users').then((res) => res.data))
+  const { data: users, isSuccess, refetch } = useQuery(['users'], getUsers)
 
   const columns = useMemo(
     () => [
@@ -54,6 +50,7 @@ const Users = (props: Props) => {
         return {
           id: user._id,
           username: user.username,
+          email: user.email,
           avatar: user.avatar,
           action: (
             <TableActionCell>
