@@ -7,13 +7,36 @@ class PropertiesController {
 
   public getProperties = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const isCount: boolean = req.query.count && req.query.count === 'true' ? true : false
+      const { count, countByCities, countByPropertyTypes, ...filters } = req.query
+      const isCount: boolean = count && count === 'true' ? true : false
 
-      if (isCount) {
-        const totalCount = await this.propertyService.countProperties()
+      if (countByPropertyTypes) {
+        const types = (countByPropertyTypes as string).split(',')
+        const counts = await Promise.all(
+          types.map(async (type) => ({
+            type,
+            count: await this.propertyService.countProperties({ type }),
+          }))
+        )
+
+        res.status(200).json(counts)
+      } else if (countByCities) {
+        const cities = (countByCities as string).split(',')
+        const counts = await Promise.all(
+          cities.map(async (city) => ({
+            city,
+            count: await this.propertyService.countProperties({ city }),
+          }))
+        )
+
+        res.status(200).json(counts)
+      } else if (isCount) {
+        const totalCount = await this.propertyService.countProperties(filters)
+
         res.status(200).json(totalCount)
       } else {
         const propertiesData = await this.propertyService.findProperties()
+
         res.status(200).json(propertiesData)
       }
     } catch (error) {

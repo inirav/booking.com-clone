@@ -54,8 +54,8 @@ class PropertyService {
     return deletePropertyById
   }
 
-  public async countProperties(): Promise<number> {
-    const count = await propertyModel.count()
+  public async countProperties(filters: any = {}): Promise<number> {
+    const count = await propertyModel.countDocuments(filters)
 
     return count
   }
