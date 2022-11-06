@@ -5,9 +5,6 @@ import * as Yup from 'yup'
 import { useCallback, useMemo, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import Table from '../../components/Table'
-import HotelTypes from '../../constants/HotelTypes'
-import api from '../../utils/api'
-import Hotel from '../../types/Hotel'
 import toast from 'react-hot-toast'
 import { BiTrash } from 'react-icons/bi'
 import TableActionCell from '../../components/TableActionCell'
@@ -15,41 +12,49 @@ import { FieldArray } from 'formik'
 import { FieldGroup, FormAction, FormElement } from '../../components/Form/styles'
 import Field from '../../components/Form/Field'
 import { RoomFieldSet, RoomFieldSetContaier, RoomFieldSetTitle } from './styles'
+import PropertyTypes from '../../constants/propertyTypes'
+import {
+  createProperty,
+  deleteProperty,
+  getProperties,
+  getPropertyById,
+  updateProperty,
+} from '../../services/properties'
+import { createRoom, getRooms, updateRoom } from '../../services/rooms'
 
-const ROOM_INITIAL_STATE = { name: '', desc: '', maxPeople: 2, price: '', roomNumbers: '' }
+const ROOM_INITIAL_STATE = {
+  id: '',
+  name: '',
+  desc: '',
+  price: undefined as undefined | number,
+  roomNumbers: '',
+}
 
 const INITIAL_STATE = {
   name: '',
   type: 'resort',
   city: '',
   address: '',
-  description: '',
-  cheapestPrice: '',
-  rating: '',
-  reviews: '',
-  distance: '',
+  desc: '',
+  cheapestPrice: undefined as undefined | number,
+  distance: undefined as undefined | number,
   highlights: '',
   freeAirportTaxi: true,
   freeCancellation: true,
-  featured: false,
-  photos: [] as string[],
+  images: [] as string[],
   rooms: [ROOM_INITIAL_STATE],
 }
 
 type Props = {}
 
-const Hotels = (props: Props) => {
+const Properties = (props: Props) => {
   const [isOpenModal, setIsOpenModal] = useState(false)
   const [updateId, setUpdateId] = useState('')
   const [initialState, setInitialState] = useState(INITIAL_STATE)
 
   const isUpdateMode = () => updateId !== ''
 
-  const {
-    data: hotels,
-    isSuccess,
-    refetch,
-  } = useQuery(['hotels'], (): Promise<Hotel[]> => api.get('/hotels').then((res) => res.data))
+  const { data: properties, isSuccess, refetch } = useQuery(['properties'], getProperties)
 
   const columns = useMemo(
     () => [
@@ -70,36 +75,32 @@ const Hotels = (props: Props) => {
       switch (type) {
         case 'DELETE':
           if (!window.confirm('Are you sure?')) return
-          await api.delete(`/hotels/${id}`)
+          await deleteProperty(id)
           refetch()
-          toast.success('Hotel is deleted successfully')
+          toast.success('Property is deleted successfully')
 
           break
         case 'UPDATE':
-          const res = await api.get(`/hotels/${id}`)
-          const hotel: Hotel = res.data
-          if (!hotel) return
+          const property = await getPropertyById(id)
+          const rooms = await getRooms(property._id)
 
           setInitialState({
-            name: hotel.name,
-            type: hotel.type,
-            city: hotel.city,
-            address: hotel.address,
-            description: hotel.description,
-            cheapestPrice: hotel.cheapestPrice.toString(),
-            rating: hotel.rating.toString(),
-            reviews: hotel.rating.toString(),
-            distance: hotel.distance.toString(),
-            highlights: hotel.highlights,
-            freeAirportTaxi: hotel.freeAirportTaxi,
-            freeCancellation: hotel.freeCancellation,
-            featured: hotel.featured,
-            photos: hotel.photos,
-            rooms: hotel.rooms.map((room) => ({
+            name: property.name,
+            type: property.type,
+            city: property.city,
+            address: property.address,
+            desc: property.desc,
+            cheapestPrice: property.cheapestPrice,
+            distance: property.distance,
+            highlights: property.highlights,
+            freeAirportTaxi: property.freeAirportTaxi,
+            freeCancellation: property.freeCancellation,
+            images: property.images,
+            rooms: rooms.map((room) => ({
+              id: room._id,
               name: room.name,
               desc: room.desc,
-              maxPeople: room.maxPeople,
-              price: room.price.toString(),
+              price: room.price,
               roomNumbers: room.roomNumbers.map((roomNumber) => roomNumber.number).join(','),
             })),
           })
@@ -114,29 +115,29 @@ const Hotels = (props: Props) => {
 
   const data = useMemo(
     () =>
-      hotels?.map((hotel) => {
+      properties?.map((property) => {
         return {
-          id: hotel._id,
-          name: hotel.name,
-          type: hotel.type,
-          city: hotel.city,
-          address: hotel.address,
-          cheapestPrice: hotel.cheapestPrice,
-          rating: hotel.rating,
+          id: property._id,
+          name: property.name,
+          type: property.type,
+          city: property.city,
+          address: property.address,
+          cheapestPrice: property.cheapestPrice,
+          rating: property.rating,
           action: (
             <TableActionCell>
               <BiTrash
                 color="red"
                 onClick={(e) => {
                   e.stopPropagation()
-                  handleActions(hotel._id, 'DELETE')
+                  handleActions(property._id, 'DELETE')
                 }}
               />
             </TableActionCell>
           ),
         }
       }),
-    [hotels, handleActions]
+    [properties, handleActions]
   )
 
   return (
@@ -160,7 +161,7 @@ const Hotels = (props: Props) => {
       <Modal
         isOpen={isOpenModal}
         setIsOpen={setIsOpenModal}
-        title={isUpdateMode() ? initialState.name : 'Add Hotel'}
+        title={isUpdateMode() ? initialState.name : 'Add Property'}
       >
         <Form
           initialValues={initialState}
@@ -169,22 +170,16 @@ const Hotels = (props: Props) => {
             type: Yup.string().required('This field is required'),
             city: Yup.string().required('This field is required'),
             address: Yup.string().required('This field is required'),
-            description: Yup.string().required('This field is required'),
+            desc: Yup.string().required('This field is required'),
             highlights: Yup.string().required('This field is required'),
             cheapestPrice: Yup.number().required('This field is required'),
-            rating: Yup.number()
-              .required('This field is required')
-              .min(0, 'Rating must be between 0 to 10')
-              .max(10, 'Rating must be between 0 to 10'),
-            reviews: Yup.number().required('This field is required'),
             distance: Yup.number().required('This field is required'),
-            photos: Yup.array().min(1, 'Upload at list one photo'),
+            images: Yup.array().min(1, 'Upload at list one photo'),
             rooms: Yup.array()
               .of(
                 Yup.object().shape({
                   name: Yup.string().required('This field is required'),
                   desc: Yup.string().required('This field is required'),
-                  maxPeople: Yup.number().required('This field is required'),
                   price: Yup.number().required('This field is required'),
                   roomNumbers: Yup.string().required('This field is required'),
                 })
@@ -192,40 +187,58 @@ const Hotels = (props: Props) => {
               .min(1, 'Add at least one room type'),
           })}
           onSubmit={async (values, { setSubmitting }) => {
-            const payload: any = {
-              ...values,
-              rooms: values.rooms.map((room) => ({
-                ...room,
-                roomNumbers: room.roomNumbers.split(',').map((num) => +num),
-              })),
-            }
+            const { rooms, ...propertyPayload } = values
+            const roomsPayload = rooms.map((room) => ({
+              ...room,
+              roomNumbers: room.roomNumbers.split(','),
+            }))
 
             if (isUpdateMode()) {
-              await api.put(`/hotels/${updateId}`, payload)
-              toast.success('Hotel updated successfully')
+              await updateProperty(updateId, propertyPayload)
+
+              await Promise.all(
+                roomsPayload.map((roomPayload) => {
+                  const { id, ...payload } = roomPayload
+                  return id === ''
+                    ? createRoom(updateId, payload)
+                    : updateRoom(updateId, id, payload)
+                })
+              )
+
+              toast.success('Property updated successfully')
             } else {
-              await api.post(`/hotels`, payload)
-              toast.success('Hotel added successfully')
+              const property = await createProperty(propertyPayload)
+              await Promise.all(
+                roomsPayload.map((roomPayload) => {
+                  const { id, ...payload } = roomPayload
+                  return createRoom(property._id, payload)
+                })
+              )
+
+              toast.success('Property added successfully')
             }
             setSubmitting(false)
             // setIsOpenModal(false)
             refetch()
           }}
         >
-          {({ isSubmitting, values }) => (
+          {({ isSubmitting, values, errors }) => (
             <FormElement>
               <Field.Input name="name" label="Name" />
               <FieldGroup>
-                <Field.Select name="type" label="Type" options={HotelTypes} />
+                <Field.Select
+                  name="type"
+                  label="Type"
+                  options={Object.keys(PropertyTypes).map((item) => ({
+                    value: item.toLowerCase(),
+                    label: item,
+                  }))}
+                />
                 <Field.Input name="city" label="City" />
               </FieldGroup>
               <Field.Textarea name="address" label="Address" />
-              <Field.TextEditor name="description" label="Description" />
+              <Field.TextEditor name="desc" label="Description" />
               <Field.TextEditor name="highlights" label="Highlights" />
-              <FieldGroup>
-                <Field.Input type="number" name="rating" label="Rating" />
-                <Field.Input type="number" name="reviews" label="Review Count" />
-              </FieldGroup>
               <FieldGroup>
                 <Field.Input type="number" name="cheapestPrice" label="Cheapest Price" />
                 <Field.Input type="number" name="distance" label="Distance from Center (m)" />
@@ -233,9 +246,8 @@ const Hotels = (props: Props) => {
               <FieldGroup>
                 <Field.Input type="checkbox" name="freeAirportTaxi" label="Free Airport Taxi" />
                 <Field.Input type="checkbox" name="freeCancellation" label="Free Cancellation" />
-                <Field.Input type="checkbox" name="featured" label="Featured" />
               </FieldGroup>
-              <Field.ImageUploadWidget name="photos" label="Photos" />
+              <Field.ImageUploadWidget name="images" label="Images" />
 
               <RoomFieldSetTitle>Room Types</RoomFieldSetTitle>
 
@@ -247,11 +259,6 @@ const Hotels = (props: Props) => {
                         <Field.Input name={`rooms.${index}.name`} label="Name" />
                         <Field.TextEditor name={`rooms.${index}.desc`} label="Description" />
                         <FieldGroup>
-                          <Field.Input
-                            type="number"
-                            name={`rooms.${index}.maxPeople`}
-                            label="Max People"
-                          />
                           <Field.Input type="number" name={`rooms.${index}.price`} label="Price" />
                           <Field.Input name={`rooms.${index}.roomNumbers`} label="Room Numbers" />
                         </FieldGroup>
@@ -285,4 +292,4 @@ const Hotels = (props: Props) => {
   )
 }
 
-export default Hotels
+export default Properties
