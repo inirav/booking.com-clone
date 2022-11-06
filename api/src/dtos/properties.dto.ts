@@ -36,7 +36,7 @@ export class CreatePropertyDto {
 
   @IsNotEmpty()
   @IsArray()
-  @ArrayMinSize(4)
+  // @ArrayMinSize(4)
   images!: string[]
 
   @IsNotEmpty()
