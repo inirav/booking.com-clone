@@ -76,7 +76,7 @@ class UserService {
   }
 
   public async countUsers(): Promise<number> {
-    const count = await userModel.count()
+    const count = await userModel.countDocuments()
 
     return count
   }
