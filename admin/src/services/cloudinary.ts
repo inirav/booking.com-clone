@@ -16,10 +16,7 @@ export const upload_image = async (file: File): Promise<any> => {
   formData.append('upload_preset', config.UPLOAD_PRESET)
   formData.append('folder', config.FOLDER)
 
-  try {
-    const res = await axios.post(url, formData)
-    return res.data
-  } catch (error) {
-    throw new Error('Uploading image failed')
-  }
+  const res = await axios.post(url, formData)
+
+  return res.data
 }
