@@ -6,7 +6,7 @@ import userModel from '../models/users.model'
 import { isEmpty } from '../utils/util'
 
 class UserService {
-  public async findAllUser(): Promise<User[]> {
+  public async findUsers(): Promise<User[]> {
     const users: User[] = await userModel.find().select('-password')
 
     return users
@@ -73,6 +73,12 @@ class UserService {
     if (!deleteUserById) throw new HttpException(400, "User doesn't exist")
 
     return deleteUserById
+  }
+
+  public async countUsers(): Promise<number> {
+    const count = await userModel.count()
+
+    return count
   }
 }
 

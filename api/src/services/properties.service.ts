@@ -53,6 +53,12 @@ class PropertyService {
 
     return deletePropertyById
   }
+
+  public async countProperties(): Promise<number> {
+    const count = await propertyModel.count()
+
+    return count
+  }
 }
 
 export default PropertyService

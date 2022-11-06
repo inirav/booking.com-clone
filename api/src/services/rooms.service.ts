@@ -56,6 +56,13 @@ class RoomService {
 
     return deleteRoomById
   }
+
+  public async countRooms(propertyId: string): Promise<number> {
+    const findPropertyById = await propertyModel.findById(propertyId)
+    if (!findPropertyById) throw new HttpException(400, "Property doesn't exist")
+
+    return findPropertyById.rooms.length
+  }
 }
 
 export default RoomService

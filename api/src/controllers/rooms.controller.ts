@@ -8,9 +8,15 @@ class RoomsController {
   public getRooms = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const propertyId: string = req.params.propertyId
-      const roomsData = await this.roomService.findRooms(propertyId)
+      const isCount: boolean = req.query.count && req.query.count === 'true' ? true : false
 
-      res.status(200).json(roomsData)
+      if (isCount) {
+        const totalCount = await this.roomService.countRooms(propertyId)
+        res.status(200).json(totalCount)
+      } else {
+        const roomsData = await this.roomService.findRooms(propertyId)
+        res.status(200).json(roomsData)
+      }
     } catch (error) {
       next(error)
     }

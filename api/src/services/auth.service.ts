@@ -32,10 +32,10 @@ class AuthService {
     const findUser: User | null = await userModel
       .findOne({ username: userData.username })
       .select('+password')
-    if (!findUser) throw new HttpException(409, 'Invalid username and/or password')
+    if (!findUser) throw new HttpException(401, 'Invalid username and/or password')
 
     const isPasswordMatching: boolean = await compare(userData.password, findUser.password)
-    if (!isPasswordMatching) throw new HttpException(409, 'Invalid username and/or password')
+    if (!isPasswordMatching) throw new HttpException(401, 'Invalid username and/or password')
 
     const tokenData = this.createToken(findUser)
 

@@ -8,9 +8,15 @@ class UsersController {
 
   public getUsers = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const findAllUsersData: User[] = await this.userService.findAllUser()
+      const isCount: boolean = req.query.count && req.query.count === 'true' ? true : false
 
-      res.status(200).json(findAllUsersData)
+      if (isCount) {
+        const totalCount = await this.userService.countUsers()
+        res.status(200).json(totalCount)
+      } else {
+        const findAllUsersData: User[] = await this.userService.findUsers()
+        res.status(200).json(findAllUsersData)
+      }
     } catch (error) {
       next(error)
     }

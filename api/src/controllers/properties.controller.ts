@@ -7,9 +7,15 @@ class PropertiesController {
 
   public getProperties = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const propertiesData = await this.propertyService.findProperties()
+      const isCount: boolean = req.query.count && req.query.count === 'true' ? true : false
 
-      res.status(200).json(propertiesData)
+      if (isCount) {
+        const totalCount = await this.propertyService.countProperties()
+        res.status(200).json(totalCount)
+      } else {
+        const propertiesData = await this.propertyService.findProperties()
+        res.status(200).json(propertiesData)
+      }
     } catch (error) {
       next(error)
     }
