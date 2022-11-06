@@ -4,21 +4,27 @@ import * as yup from 'yup'
 import Field from '../../components/Form/Field'
 import Button from '../../components/Button'
 import { login } from '../../services/auth'
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 import { AuthContext } from '../../contexts/AuthContext'
 import { useNavigate } from 'react-router-dom'
 import { FormAction } from '../../components/Form/styles'
+import Error from '../../components/Error'
 
 type Props = {}
 
 const Login = (props: Props) => {
   const { dispatch } = useContext(AuthContext)
   const navigate = useNavigate()
+  const [error, setError] = useState('')
 
   const handleLogin = async (payload: any) => {
-    const data = await login(payload)
-    dispatch({ type: 'LOGIN', payload: data })
-    navigate('/')
+    try {
+      const data = await login(payload)
+      dispatch({ type: 'LOGIN', payload: { accessToken: data.tokenData.token, user: data.user } })
+      navigate('/')
+    } catch (error) {
+      setError('Invalid username and/or password')
+    }
   }
 
   return (
@@ -26,6 +32,7 @@ const Login = (props: Props) => {
       <Wrapper>
         <Title>Log In</Title>
 
+        {error && <Error className="error-msg">{error}</Error>}
         <Form
           initialValues={{
             username: '',

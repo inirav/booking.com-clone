@@ -6,6 +6,10 @@ export const Container = styled.div`
   justify-content: center;
   height: 100vh;
   background-color: #363740;
+
+  .error-msg {
+    margin-bottom: 15px;
+  }
 `
 
 export const Wrapper = styled.div`
