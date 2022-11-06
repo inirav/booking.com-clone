@@ -15,6 +15,7 @@ export interface Property {
   distance: number
   freeAirportTaxi: boolean
   freeCancellation: boolean
+  featured: boolean
   highlights: string
   rooms: Types.ObjectId[] | Room[]
 }

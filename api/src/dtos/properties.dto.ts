@@ -52,6 +52,10 @@ export class CreatePropertyDto {
   freeCancellation!: boolean
 
   @IsNotEmpty()
+  @IsBoolean()
+  featured!: boolean
+
+  @IsNotEmpty()
   @IsString()
   highlights!: string
 }
