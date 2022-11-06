@@ -6,8 +6,8 @@ import roomModel from '../models/rooms.models'
 import { isEmpty } from '../utils/util'
 
 class PropertyService {
-  public async findProperties(): Promise<Property[]> {
-    const properties: Property[] = await propertyModel.find()
+  public async findProperties(filters: any = {}): Promise<Property[]> {
+    const properties: Property[] = await propertyModel.find(filters)
 
     return properties
   }
