@@ -15,16 +15,8 @@ class PropertiesRoute {
   }
 
   private initializeRoutes() {
-    this.router.get(
-      `${this.path}`,
-      authMiddleware([UserRoles.USER, UserRoles.ADMIN]),
-      this.propertiesController.getProperties
-    )
-    this.router.get(
-      `${this.path}/:id`,
-      authMiddleware([UserRoles.USER, UserRoles.ADMIN]),
-      this.propertiesController.getPropertyById
-    )
+    this.router.get(`${this.path}`, this.propertiesController.getProperties)
+    this.router.get(`${this.path}/:id`, this.propertiesController.getPropertyById)
     this.router.post(
       `${this.path}`,
       authMiddleware([UserRoles.ADMIN]),

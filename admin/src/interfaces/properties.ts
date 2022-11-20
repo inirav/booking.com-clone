@@ -15,6 +15,7 @@ export interface Property {
   distance: number
   freeAirportTaxi: boolean
   freeCancellation: boolean
+  featured: boolean
   highlights: string
 }
 export default Property

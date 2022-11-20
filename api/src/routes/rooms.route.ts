@@ -15,16 +15,8 @@ class RoomsRoute {
   }
 
   private initializeRoutes() {
-    this.router.get(
-      `${this.path}`,
-      authMiddleware([UserRoles.USER, UserRoles.ADMIN]),
-      this.roomsController.getRooms
-    )
-    this.router.get(
-      `${this.path}/:id`,
-      authMiddleware([UserRoles.USER, UserRoles.ADMIN]),
-      this.roomsController.getRoomById
-    )
+    this.router.get(`${this.path}`, this.roomsController.getRooms)
+    this.router.get(`${this.path}/:id`, this.roomsController.getRoomById)
     this.router.post(
       `${this.path}`,
       authMiddleware([UserRoles.ADMIN]),

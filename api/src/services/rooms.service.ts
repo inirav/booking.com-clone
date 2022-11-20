@@ -1,7 +1,7 @@
 import { CreateRoomDto } from '../dtos/rooms.dto'
 import { HttpException } from '../exceptions/HttpException'
 import { Property } from '../interfaces/properties.interface'
-import { Room } from '../interfaces/rooms.interface'
+import { Room, RoomAvailabilityData } from '../interfaces/rooms.interface'
 import propertyModel from '../models/properties.model'
 import roomModel from '../models/rooms.models'
 import { isEmpty } from '../utils/util'
@@ -62,6 +62,21 @@ class RoomService {
     if (!findPropertyById) throw new HttpException(400, "Property doesn't exist")
 
     return findPropertyById.rooms.length
+  }
+
+  public async updateRoomAvailability(roomData: RoomAvailabilityData, isDeleting: boolean = false) {
+    await Promise.all(
+      roomData.roomNumbers.map((roomNumber) =>
+        roomModel.updateOne(
+          { _id: roomData.id, 'roomNumbers.number': roomNumber.number },
+          {
+            [isDeleting ? '$pullAll' : '$push']: {
+              'roomNumbers.$.unavailableDates': roomNumber.unavailableDates,
+            },
+          }
+        )
+      )
+    )
   }
 }
 

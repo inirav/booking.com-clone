@@ -20,6 +20,8 @@ const Login = (props: Props) => {
   const handleLogin = async (payload: any) => {
     try {
       const data = await login(payload)
+      if (data.user.role !== 'admin') return setError('Invalid username and/or password')
+
       dispatch({ type: 'LOGIN', payload: { accessToken: data.tokenData.token, user: data.user } })
       navigate('/')
     } catch (error) {

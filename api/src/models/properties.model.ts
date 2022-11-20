@@ -27,10 +27,6 @@ const propertySchema = new Schema(
       type: Number,
       required: true,
     },
-    rating: {
-      type: Number,
-      default: -1,
-    },
     images: {
       type: [String],
       required: true,

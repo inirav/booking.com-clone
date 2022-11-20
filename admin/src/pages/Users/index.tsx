@@ -36,7 +36,7 @@ const Users = (props: Props) => {
           if (!window.confirm('Are you sure?')) return
           await api.delete(`/users/${id}`)
           refetch()
-          toast.success('User is deleted successfully')
+          toast.success('User deleted successfully')
 
           break
       }

@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import Card from '../../components/Card'
 import { getPropertyCount } from '../../services/properties'
+import { getReservationCount } from '../../services/reservations'
 import { getUserCount } from '../../services/users'
 import { Cards } from './styles'
 
@@ -12,8 +13,10 @@ const Home = (props: Props) => {
     ['propertyCount'],
     getPropertyCount
   )
-
-  console.log(propertyCount)
+  const { data: reservationCount, isSuccess: isSuccessReservationCount } = useQuery(
+    ['reservationCount'],
+    getReservationCount
+  )
 
   return (
     <Cards>
@@ -21,7 +24,9 @@ const Home = (props: Props) => {
       {isSuccessPropertyCount && (
         <Card title="Properties" count={propertyCount} path="/properties" />
       )}
-      <Card title="Reservation" count={40} path="/reservations" />
+      {isSuccessReservationCount && (
+        <Card title="Reservation" count={reservationCount} path="/reservations" />
+      )}
     </Cards>
   )
 }

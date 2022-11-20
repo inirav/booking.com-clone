@@ -10,7 +10,6 @@ export interface Property {
   address: string
   desc: string
   cheapestPrice: number
-  rating: number
   images: Types.Array<string>
   distance: number
   freeAirportTaxi: boolean

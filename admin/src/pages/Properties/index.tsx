@@ -41,6 +41,7 @@ const INITIAL_STATE = {
   highlights: '',
   freeAirportTaxi: true,
   freeCancellation: true,
+  featured: false,
   images: [] as string[],
   rooms: [ROOM_INITIAL_STATE],
 }
@@ -64,7 +65,6 @@ const Properties = (props: Props) => {
       { Header: 'City', accessor: 'city' },
       { Header: 'Address', accessor: 'address' },
       { Header: 'Cheapest Price', accessor: 'cheapestPrice' },
-      { Header: 'Rating', accessor: 'rating' },
       { Header: 'Action', accessor: 'action' },
     ],
     []
@@ -95,6 +95,7 @@ const Properties = (props: Props) => {
             highlights: property.highlights,
             freeAirportTaxi: property.freeAirportTaxi,
             freeCancellation: property.freeCancellation,
+            featured: property.featured,
             images: property.images,
             rooms: rooms.map((room) => ({
               id: room._id,
@@ -123,7 +124,6 @@ const Properties = (props: Props) => {
           city: property.city,
           address: property.address,
           cheapestPrice: property.cheapestPrice,
-          rating: property.rating,
           action: (
             <TableActionCell>
               <BiTrash
@@ -218,7 +218,7 @@ const Properties = (props: Props) => {
               toast.success('Property added successfully')
             }
             setSubmitting(false)
-            // setIsOpenModal(false)
+            setIsOpenModal(false)
             refetch()
           }}
         >
@@ -246,6 +246,7 @@ const Properties = (props: Props) => {
               <FieldGroup>
                 <Field.Input type="checkbox" name="freeAirportTaxi" label="Free Airport Taxi" />
                 <Field.Input type="checkbox" name="freeCancellation" label="Free Cancellation" />
+                <Field.Input type="checkbox" name="featured" label="Featured" />
               </FieldGroup>
               <Field.ImageUploadWidget name="images" label="Images" />
 

@@ -2,6 +2,7 @@ import { hash } from 'bcrypt'
 import { CreateUserDto } from '../dtos/users.dto'
 import { HttpException } from '../exceptions/HttpException'
 import { User } from '../interfaces/users.interface'
+import reservationModel from '../models/reservatons.model'
 import userModel from '../models/users.model'
 import { isEmpty } from '../utils/util'
 
@@ -71,6 +72,9 @@ class UserService {
   public async deleteUser(userId: string): Promise<User> {
     const deleteUserById: User | null = await userModel.findByIdAndDelete(userId)
     if (!deleteUserById) throw new HttpException(400, "User doesn't exist")
+
+    // Deleting related reservations
+    await reservationModel.deleteMany({ user: deleteUserById._id })
 
     return deleteUserById
   }

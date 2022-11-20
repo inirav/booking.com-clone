@@ -7,6 +7,7 @@ import Users from './pages/Users'
 import Login from './pages/Login'
 import Logout from './pages/Logout'
 import Properties from './pages/Properties'
+import Reservations from './pages/Reservations'
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
             <Route index element={<Home />} />
             <Route path="users" element={<Users />} />
             <Route path="properties" element={<Properties />} />
+            <Route path="reservations" element={<Reservations />} />
           </Route>
         </Routes>
       </BrowserRouter>

@@ -2,6 +2,7 @@ import { CreatePropertyDto } from '../dtos/properties.dto'
 import { HttpException } from '../exceptions/HttpException'
 import { Property } from '../interfaces/properties.interface'
 import propertyModel from '../models/properties.model'
+import reservationModel from '../models/reservatons.model'
 import roomModel from '../models/rooms.models'
 import { isEmpty } from '../utils/util'
 
@@ -49,7 +50,9 @@ class PropertyService {
     const deletePropertyById: Property | null = await propertyModel.findByIdAndDelete(propertyId)
     if (!deletePropertyById) throw new HttpException(400, "Property doesn't exit")
 
+    // Deleting related rooms and reservations
     await roomModel.deleteMany({ _id: { $in: deletePropertyById.rooms } })
+    await reservationModel.deleteMany({ property: deletePropertyById._id })
 
     return deletePropertyById
   }
