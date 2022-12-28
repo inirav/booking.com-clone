@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "license": "MIT",
   "scripts": {
-    "start": "ts-node-dev --respawn ./src/index.ts"
+    "start": "ts-node-dev --respawn ./src/index.ts",
+    "build": "tsc"
   },
   "dependencies": {
     "bcrypt": "^5.1.0",
