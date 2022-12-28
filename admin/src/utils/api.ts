@@ -2,7 +2,10 @@ import axios from 'axios'
 import queryString from 'query-string'
 
 const api = axios.create({
-  baseURL: process.env.API_URL || 'http://localhost:5000',
+  baseURL:
+    process.env.NODE_ENV === 'development'
+      ? 'http://localhost:5000'
+      : 'https://booking-com-api.onrender.com',
   paramsSerializer: queryString.stringify,
 })
 
