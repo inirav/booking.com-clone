@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "start": "ts-node-dev --respawn ./src/index.ts",
-    "build": "tsc"
+    "build": "npx tsc"
   },
   "dependencies": {
     "bcrypt": "^5.1.0",
